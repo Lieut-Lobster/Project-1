@@ -20,7 +20,7 @@ public class Pet {
     @Override
     public String toString() {
         String Information;
-        Information = String.format("%3s%5s%5s%3d%3s\n", "|", name, "|", age, "|");
+        Information = String.format("%4s%7s%7s%4d%4s\n", "|", name, "|", age, "|");
         return Information;
     }
 

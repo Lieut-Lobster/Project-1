@@ -45,13 +45,13 @@ public class Main {
                     break;
                 case 4:
                     removePet(scan);
-                    break;
+                    break;*/
                 case 5:
                     searchName(scan);
                     break;
                 case 6:
                     searchAge(scan);
-                    break;*/
+                    break;
                 case 7:
                     System.out.println("Goodbye!");
                     break;
@@ -81,9 +81,9 @@ public class Main {
              */
     private static void viewAllPets() {
 
-        System.out.println("+---------------------+");
-        System.out.printf("|%3s%3s%5s%5s%3s%3s\n", "ID", "|", "NAME", "|", "AGE", "|");
-        System.out.println("+---------------------+");
+        System.out.println("+----------------------------+");
+        System.out.printf("|%4s%4s%7s%7s%4s%4s\n", "ID", "|", "NAME", "|", "AGE", "|");
+        System.out.println("+----------------------------+");
         int count = 0;
         for (Pet pet : group) {
 
@@ -91,7 +91,7 @@ public class Main {
 
             count++;
         }
-        System.out.println("+---------------------+");
+        System.out.println("+----------------------------+");
         System.out.println((count) + " rows in set.");
     }
 
@@ -124,6 +124,56 @@ public class Main {
 
         } while (!petInfo.equalsIgnoreCase("done"));
         System.out.println(count + " pets added.");
+    }
+
+    /*
+         Allows for the functionality to single out pets with that name (not case-sensitive)
+        */
+    private static void searchName(Scanner scan) {
+
+        System.out.print("Enter name to search: ");
+        String name = scan.nextLine();
+
+        System.out.println("+----------------------------+");
+        System.out.printf("|%4s%4s%7s%7s%4s%4s\n", "ID", "|", "NAME", "|", "AGE", "|");
+        System.out.println("+----------------------------+");
+        int i = 0;
+        for (Pet pet : group) {
+
+            if (pet.getName().equalsIgnoreCase(name)) {
+
+                System.out.printf("|%4d%4s", i, pet);
+                i++;
+            }
+        }
+        System.out.println("+----------------------------+");
+        System.out.println((i) + "rows in set.");
+
+    }
+
+    /*
+      This allows for the user to search for pets using their age as a parameter
+     */
+    private static void searchAge(Scanner scan) {
+
+        System.out.print("Enter age to search: ");
+        int age = scan.nextInt();
+        scan.nextLine();
+        System.out.println("+----------------------------+");
+        System.out.printf("|%4s%4s%7s%7s%4s%4s\n", "ID", "|", "NAME", "|", "AGE", "|");
+        System.out.println("+----------------------------+");
+        int i = 0;
+        for (Pet pet : group) {
+
+            if (pet.getAge() == age) {
+
+                System.out.printf("|%4d%4s", i, pet);
+                i++;
+            }
+        }
+        System.out.println("+----------------------------+");
+        System.out.println((i) + "rows in set.");
+
     }
 
 

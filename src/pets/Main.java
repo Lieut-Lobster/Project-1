@@ -40,12 +40,12 @@ public class Main {
                 case 2:
                     addPets(scan);
                     break;
-                /*case 3:
+                case 3:
                     updatePetInfo(scan);
                     break;
                 case 4:
                     removePet(scan);
-                    break;*/
+                    break;
                 case 5:
                     searchName(scan);
                     break;
@@ -175,6 +175,44 @@ public class Main {
         System.out.println((i) + "rows in set.");
 
     }
+
+    /*
+          Update existing pet from your list
+         */
+    private static void updatePetInfo(Scanner scan) {
+
+        viewAllPets();
+        System.out.print("Enter the pet ID you want to update: ");
+        int id = scan.nextInt();
+        scan.nextLine();
+        System.out.print("Enter new name and new age: ");
+        String petInfo = scan.nextLine();
+        String name = petInfo.split("\\s+")[0]; //https://www.w3schools.com/jsref/jsref_regexp_whitespace.asp is how i learned to use the \\s short-hand expression
+        int age = Integer.parseInt(petInfo.split("\\s+")[1]);
+        String oldName = group.get(id).getName();
+        int oldAge = group.get(id).getAge();
+        group.get(id).setName(name);
+        group.get(id).setAge(age);
+
+        System.out.println(oldName + " " + oldAge + " changed to " + name + " " + age);
+    }
+
+    /*
+          Removes the existing pet from your list
+         */
+    private static void removePet(Scanner scan) {
+
+        viewAllPets();
+        System.out.print("Enter the pet ID to remove: ");
+        int id = scan.nextInt();
+        scan.nextLine();
+
+        String name = group.get(id).getName();
+        int age = group.get(id).getAge();
+        group.remove(id);
+        System.out.println(name + " " + age + " is removed.");
+    }
+
 
 
 

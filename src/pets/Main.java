@@ -1,6 +1,13 @@
 package pets;
+import java.io.FileNotFoundException;
+import java.lang.reflect.Array;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 /*
     Josiah Skorseth
@@ -10,17 +17,40 @@ import java.util.Scanner;
  */
 
 public class Main {
-    /*
-           Setting an Array list of <Pet> to 'group'
+     /*
+       Setting an Array list of <Pet> to 'group'
        */
     static ArrayList<Pet> group;
+    static ArrayList<Object> dataList;
 
 
 
     /*
       The main method... (not much more to say about it)
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
+
+
+        File file = new File ("out.txt");
+        Scanner scanFile = new Scanner(file);
+
+
+
+        //So i did everything that I could to load my out.txt file to my current array but no matter which way I did it, it would not tie to my original array list / 'group'
+        
+        //System.out.println(scanFile.next());
+        //System.out.println(scanFile.nextInt());
+/*
+        try {
+            ArrayList<String> group = new ArrayList<>(Files.readAllLines(Paths.get("out.txt")));
+        }
+        catch (IOException e) {
+            // Handle a potential exception
+        }*/
+
+
+
+
 
         System.out.print("Pet Database Program\n\n");
         //I do not know why it was having an issue with spacing with original \n but two did the job to make it look cleaner
@@ -41,27 +71,17 @@ public class Main {
                     addPets(scan);
                     break;
                 case 3:
-                    updatePetInfo(scan);
-                    break;
-                case 4:
                     removePet(scan);
                     break;
-                case 5:
-                    searchName(scan);
-                    break;
-                case 6:
-                    searchAge(scan);
-                    break;
-                case 7:
+                case 4:
                     System.out.println("Goodbye!");
                     break;
-
                 default:
                     System.out.println("Invalid choice!");
                     break;
             }
 
-        } while (choice != 7);
+        } while (choice != 4);
 
         scan.close();
     }
@@ -72,8 +92,7 @@ public class Main {
     public static void menu() {
 
         System.out.println("What would you like to do?\n" + "1) View all pets\n" + "2) Add more pets\n"
-                + "3) Update an existing pet\n" + "4) Remove an existing pet\n" + "5) Search pets by name\n"
-                + "6) Search pets by age\n" + "7) Exit program");
+                 + "3) Remove an existing pet\n" + "4) Exit program");
     }
 
     /*
@@ -114,106 +133,68 @@ public class Main {
 
 
             //This if else statement aids requirements to be met if you want your pet to be added
-            if (name.length() >= 11 || age > 9999){ //(less than 11 characters for name and less than 5 numbers (or 10 thousand) for number)
-                System.out.println("Exceeded name and/or age length limitations.");
+            if (name.length() >= 11 || age > 20 || age <= 0){ //(less than 11 characters for name and less than the age between 0 - 20 for the number)
+                System.out.println("Exceeded name (10 characters or less) or the age (in-between the ages of 0 - 20).");
             }
-            else {
-                group.add(new Pet(name, age));
+            else { //This whole 'if else' nests are for the handling of errors and for limiting the user to the specified amounts needed to fill the pet database
                 count++;
+                if (count > 5) {
+                    System.out.println("You have added the maximum amount of pets in the pet database!");
+                }
+                else {
+                    group.add(new Pet(name, age));
+
+                    String fileName = "out.txt";
+                    try {
+                        PrintWriter outputStream = new PrintWriter(fileName);
+                        outputStream.println(group); //saves to the RAM
+
+                        outputStream.close(); //gives data to the file (closes allowance of more data)
+
+
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
 
         } while (!petInfo.equalsIgnoreCase("done"));
         System.out.println(count + " pets added.");
     }
 
-    /*
-         Allows for the functionality to single out pets with that name (not case-sensitive)
-        */
-    private static void searchName(Scanner scan) {
-
-        System.out.print("Enter name to search: ");
-        String name = scan.nextLine();
-
-        System.out.println("+----------------------------+");
-        System.out.printf("|%4s%4s%7s%7s%4s%4s\n", "ID", "|", "NAME", "|", "AGE", "|");
-        System.out.println("+----------------------------+");
-        int i = 0;
-        for (Pet pet : group) {
-
-            if (pet.getName().equalsIgnoreCase(name)) {
-
-                System.out.printf("|%4d%4s", i, pet);
-                i++;
-            }
-        }
-        System.out.println("+----------------------------+");
-        System.out.println((i) + "rows in set.");
-
-    }
-
-    /*
-      This allows for the user to search for pets using their age as a parameter
-     */
-    private static void searchAge(Scanner scan) {
-
-        System.out.print("Enter age to search: ");
-        int age = scan.nextInt();
-        scan.nextLine();
-        System.out.println("+----------------------------+");
-        System.out.printf("|%4s%4s%7s%7s%4s%4s\n", "ID", "|", "NAME", "|", "AGE", "|");
-        System.out.println("+----------------------------+");
-        int i = 0;
-        for (Pet pet : group) {
-
-            if (pet.getAge() == age) {
-
-                System.out.printf("|%4d%4s", i, pet);
-                i++;
-            }
-        }
-        System.out.println("+----------------------------+");
-        System.out.println((i) + "rows in set.");
-
-    }
-
-    /*
-          Update existing pet from your list
-         */
-    private static void updatePetInfo(Scanner scan) {
-
-        viewAllPets();
-        System.out.print("Enter the pet ID you want to update: ");
-        int id = scan.nextInt();
-        scan.nextLine();
-        System.out.print("Enter new name and new age: ");
-        String petInfo = scan.nextLine();
-        String name = petInfo.split("\\s+")[0]; //https://www.w3schools.com/jsref/jsref_regexp_whitespace.asp is how i learned to use the \\s short-hand expression
-        int age = Integer.parseInt(petInfo.split("\\s+")[1]);
-        String oldName = group.get(id).getName();
-        int oldAge = group.get(id).getAge();
-        group.get(id).setName(name);
-        group.get(id).setAge(age);
-
-        System.out.println(oldName + " " + oldAge + " changed to " + name + " " + age);
-    }
 
     /*
           Removes the existing pet from your list
          */
     private static void removePet(Scanner scan) {
 
+
         viewAllPets();
         System.out.print("Enter the pet ID to remove: ");
         int id = scan.nextInt();
         scan.nextLine();
+        try {
+            String name = group.get(id).getName();
+            int age = group.get(id).getAge();
+            group.remove(id);
+            System.out.println(name + " " + age + " is removed.");
+            String fileName = "out.txt";
+            try {
+                PrintWriter outputStream = new PrintWriter(fileName);
+                outputStream.println(group);
+                outputStream.close(); //gives data to the file (closes allowance of more data)
 
-        String name = group.get(id).getName();
-        int age = group.get(id).getAge();
-        group.remove(id);
-        System.out.println(name + " " + age + " is removed.");
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("\nThis was not a proper ID... try again!\n");
+            removePet(scan);
+
+        }
     }
-
-
 
 
 }

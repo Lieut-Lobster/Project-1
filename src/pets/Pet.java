@@ -1,5 +1,9 @@
 package pets;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 public class Pet {
     /* Sets the name and age */
     private String name;
